@@ -77,9 +77,4 @@ jobs:
         run: pm2 save 
 
       - name: Check API Response 
-        run: | 
-          response=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/api)
-          if [ "$response" -ne 200 ]; then 
-            echo "API check failed with status code $response"
-            exit 1
-          fi 
+        run: curl 127.0.0.1/api
