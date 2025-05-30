@@ -36,17 +36,24 @@ jobs:
   deploy: 
     needs: [ test ]
     runs-on: [ exynos-arch, self-hosted, linux, x64 ]
+    defaults: 
+      run: 
+        shell: bash
+        working-directory: /home/aureri/Git/dev-ops-three
     steps: 
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Download Test Results Artifact
-        uses: action/download-artifact@v4
+        uses: actions/download-artifact@v4
         with: 
           name: test-results
 
       - name: Display Test Results
         run: cat test-results.log
+
+      - name: Ensure correct directory
+        run: pwd
 
       - name: Check nodejs version 
         run: node -v
@@ -57,23 +64,22 @@ jobs:
       - name: Check pm2 version 
         run: pm2 -v
 
-      - name: Ensure correct directory
-        run: /home/aureri/Git/dev-ops-three && pwd
-
-      - name: Fetch & pull latest commits
-        run: git fetch && git pull 
-
       - name: Install Dependencies
         run: npm install 
 
       - name: Stop existing instances 
-        run: pm2 delete | cat
+        run: pm2 delete node-app || true
 
       - name: Start Instance 
-        run: pm2 start ./src/server.js --name node-app | cat
+        run: pm2 start ./src/server.js --name node-app
 
       - name: Save and Persist pm2 config 
-        run: pm2 save | cat 
+        run: pm2 save 
 
       - name: Check API Response 
-        run: curl 127.0.0.1:3000/api | cat 
+        run: | 
+          response=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/api)
+          if [ "$response" -ne 200 ]; then 
+            echo "API check failed with status code $response"
+            exit 1
+          fi 
