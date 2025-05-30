@@ -77,4 +77,4 @@ jobs:
         run: pm2 save 
 
       - name: Check API Response 
-        run: curl 127.0.0.1/api
+        run: curl 127.0.0.1:3000/api
