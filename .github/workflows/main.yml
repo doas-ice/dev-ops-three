@@ -43,11 +43,14 @@ jobs:
     steps: 
       - name: Checkout code
         uses: actions/checkout@v4
+        with: 
+          path: /home/aureri/dev-ops-three
 
       - name: Download Test Results Artifact
         uses: actions/download-artifact@v4
         with: 
           name: test-results
+          path: /home/aureri/Git/dev-ops-three
 
       - name: Display Test Results
         run: cat test-results.log
