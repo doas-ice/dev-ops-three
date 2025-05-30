@@ -39,24 +39,21 @@ jobs:
     defaults: 
       run: 
         shell: bash
-        working-directory: /home/aureri/Git/dev-ops-three
+
     steps: 
       - name: Checkout code
         uses: actions/checkout@v4
-        with: 
-          path: /home/aureri/dev-ops-three
 
       - name: Download Test Results Artifact
         uses: actions/download-artifact@v4
         with: 
           name: test-results
-          path: /home/aureri/Git/dev-ops-three
 
       - name: Display Test Results
         run: cat test-results.log
 
-      - name: Ensure correct directory
-        run: pwd
+      - name: Delete the Test Results File 
+        run: rm -f test-results.log
 
       - name: Check nodejs version 
         run: node -v
