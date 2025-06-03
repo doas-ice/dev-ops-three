@@ -86,3 +86,9 @@ jobs:
 
       - name: Check API Response
         run: curl 127.0.0.1:3000/api
+
+      - name: Check current user
+        run: whoami
+
+      - name: Check pwd
+        run: pwd
