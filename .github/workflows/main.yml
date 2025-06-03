@@ -1,80 +1,80 @@
 name: CI/CD Pipeline
 
-on: 
-  push: 
-    branches: [ main ]
+on:
+  push:
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
-jobs: 
-  test: 
+jobs:
+  test:
     name: Run tests & upload results
     runs-on: ubuntu-latest
 
-    steps: 
-      - name: Checking out code 
+    steps:
+      - name: Checking out code
         uses: actions/checkout@v4
 
       - name: setting up Node.js v22
         uses: actions/setup-node@v4
-        with: 
-          node-version: '22'
+        with:
+          node-version: "22"
 
       - name: Installing Dependencies
-        run: npm install 
+        run: npm install
 
       - name: Running Tests & Saving Results
         run: |
-          npm run check > test-results.log 
+          npm run check > test-results.log
 
       - name: Upload Test Results as Artifact
         uses: actions/upload-artifact@v4
-        with: 
+        with:
           name: test-results
-          path: test-results.log 
-  
-  deploy: 
-    needs: [ test ]
-    runs-on: [ exynos-arch, self-hosted, linux, x64 ]
-    defaults: 
-      run: 
+          path: test-results.log
+
+  deploy:
+    needs: [test]
+    runs-on: [self-hosted, linux, x64]
+    defaults:
+      run:
         shell: bash
 
-    steps: 
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Download Test Results Artifact
         uses: actions/download-artifact@v4
-        with: 
+        with:
           name: test-results
 
       - name: Display Test Results
         run: cat test-results.log
 
-      - name: Delete the Test Results File 
+      - name: Delete the Test Results File
         run: rm -f test-results.log
 
-      - name: Check nodejs version 
+      - name: Check nodejs version
         run: node -v
 
-      - name: Check npm version 
-        run: npm -v 
+      - name: Check npm version
+        run: npm -v
 
-      - name: Check pm2 version 
+      - name: Check pm2 version
         run: pm2 -v
 
       - name: Install Dependencies
-        run: npm install 
+        run: npm install
 
-      - name: Stop existing instances 
+      - name: Stop existing instances
         run: pm2 delete node-app || true
 
-      - name: Start Instance 
+      - name: Start Instance
         run: pm2 start ./src/server.js --name node-app
 
-      - name: Save and Persist pm2 config 
-        run: pm2 save 
+      - name: Save and Persist pm2 config
+        run: pm2 save
 
-      - name: Check API Response 
+      - name: Check API Response
         run: curl 127.0.0.1:3000/api
