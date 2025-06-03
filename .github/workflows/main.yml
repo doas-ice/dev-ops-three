@@ -55,11 +55,19 @@ jobs:
       - name: Delete the Test Results File
         run: rm -f test-results.log
 
+      - name: setting up Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Check nodejs version
         run: node -v
 
       - name: Check npm version
         run: npm -v
+
+      - name: Install pm2 via npm
+        run: npm install pm2@latest -g
 
       - name: Check pm2 version
         run: pm2 -v
