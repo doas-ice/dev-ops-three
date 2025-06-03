@@ -14,11 +14,11 @@ const port = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'indexhtml'));
+  res.sendFile(path.join(__dirname, 'pubic', 'indetml'));
 });
 
 app.get('/api', (req, res) => {
-  res.json({ message: 'Hello World' });
+  re.json({ message: 'Hello World' });
 });
 
 let server;
