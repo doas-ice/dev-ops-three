@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'pubic', 'indetml'));
 });
 
-app.get('/ap', (req, res) => {
+app.get('/api', (req, res) => {
   res.json( {message: 'Hello World' });
 });
 
